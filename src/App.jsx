@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TaskInput from "./components/TaskInput";
+import TaskInput from "./components/taskInput";
 import TaskStats from "./components/taskStats";
 import TaskItem from "./components/taskItem";
 import { ListTodo } from "lucide-react";
