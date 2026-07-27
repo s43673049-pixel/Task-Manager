@@ -1,20 +1,28 @@
-<<<<<<< HEAD
-# React + Vite
+# Task-Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple task manager built with React and Vite.
 
-Currently, two official plugins are available:
+## About
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+This project is a lightweight task management app created using the React + Vite template. It includes a minimal development setup with HMR and ESLint rules.
+
+## Template notes
+
+Originally scaffolded from the Vite React template. The template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Two official plugins are commonly used with this template:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) (uses Oxc)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) (uses SWC)
 
 ## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The React Compiler is not enabled by default because of its impact on dev & build performance. To add it, see https://react.dev/learn/react-compiler/installation.
 
-## Expanding the ESLint configuration
+## ESLint and TypeScript
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-# Task-Manager
->>>>>>> 9c968f0aaea698bd1d43025ec726f2f6e23687e6
+For production applications, consider using TypeScript with type-aware lint rules enabled. See the Vite TS template for integration details.
+
+## License
+
+Add project license and additional documentation as needed.
