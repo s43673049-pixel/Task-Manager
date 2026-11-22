@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskInput from "./components/taskInput";
 import TaskStats from "./components/taskStats";
 import TaskItem from "./components/taskItem";
@@ -6,25 +6,75 @@ import { ListTodo } from "lucide-react";
 import "./App.css";
 
 const initialTask = [];
+const API_URL = "http://localhost:3000/todo";
+
+const toTask = (item) => ({
+  id: item._id,
+  todoText: item.title,
+  todoDate: item.date ? String(item.date).slice(0, 10) : "",
+  completed: item.completed,
+});
 
 function App() {
   const [tasks, setTasks] = useState(initialTask);
   const [filter, setFilter] = useState("all");
+  const [error, setError] = useState("");
 
-  const addTask = (todoText, todoDate) => {
-    setTasks((currentTask) => [
-      ...currentTask,
-      { id: `${todoText}-${Date.now()}`, todoText, todoDate, completed: false },
-    ]);
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadTasks = async () => {
+      try {
+        const response = await fetch(API_URL);
+        const items = await response.json();
+        if (!response.ok) {
+          throw new Error(items.message || "Unable to load tasks.");
+        }
+        if (isMounted) {
+          setTasks(items.map(toTask));
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : "Unable to load tasks.");
+        }
+      }
+    };
+
+    loadTasks();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const addTask = (item) => {
+    setTasks((currentTasks) => [...currentTasks, toTask(item)]);
     setFilter("all");
+    setError("");
   };
 
-  const toggleTask = (taskId) => {
-    setTasks((currentTask) =>
-      currentTask.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task,
-      ),
-    );
+  const toggleTask = async (taskId) => {
+    const task = tasks.find((currentTask) => currentTask.id === taskId);
+    if (!task) return;
+
+    try {
+      const response = await fetch(`${API_URL}/${taskId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ completed: !task.completed }),
+      });
+      const updatedItem = await response.json();
+      if (!response.ok) {
+        throw new Error(updatedItem.message || "Unable to update the task.");
+      }
+      setTasks((currentTasks) =>
+        currentTasks.map((currentTask) =>
+          currentTask.id === taskId ? toTask(updatedItem) : currentTask,
+        ),
+      );
+      setError("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to update the task.");
+    }
   };
 
   const filteredTasks = tasks.filter((task) => {
@@ -36,8 +86,20 @@ function App() {
   const completedCount = tasks.filter((task) => task.completed).length;
   const activeCount = tasks.filter((task) => !task.completed).length;
 
-  const deleteTask = (taskId) => {
-    setTasks((currentTask) => currentTask.filter((item) => item.id !== taskId));
+  const deleteTask = async (taskId) => {
+    try {
+      const response = await fetch(`${API_URL}/${taskId}`, { method: "DELETE" });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || "Unable to delete the task.");
+      }
+      setTasks((currentTasks) =>
+        currentTasks.filter((item) => item.id !== taskId),
+      );
+      setError("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to delete the task.");
+    }
   };
 
   return (
@@ -62,6 +124,11 @@ function App() {
         <div className="mb-6">
           <TaskInput addTask={addTask} />
         </div>
+        {error && (
+          <p className="mb-4 text-sm text-red-600" role="alert">
+            {error}
+          </p>
+        )}
 
         {/* Filter Buttons */}
         <div className="flex gap-2 mb-6">
