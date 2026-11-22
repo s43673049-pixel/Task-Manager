@@ -4,7 +4,7 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dns = require('node:dns');
+
 
 const errorController = require('./controllers/errorController');
 const itemsRouter = require('./routers/itemsRouter');
